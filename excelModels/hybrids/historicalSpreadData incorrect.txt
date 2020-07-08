@@ -1,0 +1,71 @@
+13:11:42 DARREN LEFCOE : BLP_iSPREAD_MID gives a bad value for EDPPL 1.7 07/20/80
+13:11:43 BLOOMBERG HELP DESK : A specialist will assist you shortly.
+13:11:53 BLOOMBERG HELP DESK : Hello and welcome to the Bloomberg Help Desk, this is Erik Lundgren Nordin speaking and I am happy to assist you.
+13:13:35 BLOOMBERG HELP DESK : May I ask what you refer to with bad value, and what would you expect instead? Thank you!
+13:14:11 DARREN LEFCOE : Spread ~ 335,   value produced ~ 200
+13:14:34 DARREN LEFCOE : Have noticed for a couple of securities...
+13:15:15 DARREN LEFCOE : ...basically if this is incorrect,  what is the best spread measure to use.
+13:18:02 DARREN LEFCOE : You shared: BloombergGRIB_2020062547872.gif[49KB]Show Image
+13:18:09 BLOOMBERG HELP DESK : We could use another field instead, like YAS_ISPREAD (this would not be possible to  use in BDH formula for historical data).
+
+This field represent the I-spread you find on a security's YAS <GO> page
+13:18:25 DARREN LEFCOE : Agreed.
+13:18:44 DARREN LEFCOE : What is suitable and consistent for historical AND current please.
+13:19:34 DARREN LEFCOE : I was uning this,  but it seems to have a large error....   blp_i_sprd_mid
+13:20:26 DARREN LEFCOE : You shared: BloombergGRIB_2020062548021.gif[31KB]Show Image
+13:21:02 DARREN LEFCOE : ...or,  why is the value so far off please ?
+13:22:08 BLOOMBERG HELP DESK : We could use a small workaround. We could still use this field YAS_ISPREAD, but doing the following:
+
+1. Manually create a column with historical dates
+
+2. Use formula like =BDP("ZP454068@BGN Corp","YAS_ISPREAD","SETTLE_DT",A1)
+
+Where cell A1 has the date.
+
+Does this work on your end?
+13:22:50 BLOOMBERG HELP DESK : They use slightly different methodologies to come up with the values, so as a consequence they can differ
+13:23:50 DARREN LEFCOE : That would ammend the settlement date ?
+13:28:31 BLOOMBERG HELP DESK : Yes correct, so getting historical data by amending settlement date, we would therefore have several formulas where each references a separate historical settle date, so in effect getting historical data but not with BDH-formula directly, do you see what I mean?
+13:29:07 DARREN LEFCOE : I get it.  However:
+13:29:24 DARREN LEFCOE : [1] It is important to understand the error.
+13:29:45 DARREN LEFCOE : [2] use a consistent BDH function.
+13:34:30 DARREN LEFCOE : Ie.  Is there and error in my settings ?
+13:34:31 BLOOMBERG HELP DESK : Okay, so you would like to know they reason why the BLP-I-spread field deviates so much?
+13:34:40 BLOOMBERG HELP DESK : The*
+13:34:43 DARREN LEFCOE : Yes please.
+13:36:09 DARREN LEFCOE : 13:34:30 DARREN LEFCOE : Ie.  Is there and error in my settings ?
+13:36:44 BLOOMBERG HELP DESK : Checking this on my end, I get the same value for this field, 204.5 on my end whereas YAS <GO> shows above 300 like you
+13:37:02 DARREN LEFCOE : Agreed on the difference,  yes.
+13:37:14 DARREN LEFCOE : Also all the other measures are ~ 300 to 350
+13:47:11 BLOOMBERG HELP DESK : Just letting you know that I am still on this for you
+13:50:10 DARREN LEFCOE : Appreciated.
+13:53:31 DARREN LEFCOE : Is there an error because of the call date ?
+13:53:43 DARREN LEFCOE : (calculation to maturity in place of next call)
+13:55:48 BLOOMBERG HELP DESK : Yes I checked on that too, looks like one likely reason yes, also checking if it is regards swap curve defaults on SWDF  <GO>, but escalating this for swift assistance, thanks for checking on your end too
+14:00:30 DARREN LEFCOE : It looks like it is implementing a yield to worst calculation
+14:00:51 DARREN LEFCOE : That is why.
+14:02:24 BLOOMBERG HELP DESK : Hello Darren, Min Zhu is here to assist you through Bloomberg Help Desk. Your query is shared with me by my colleague.
+14:04:18 BLOOMBERG HELP DESK : SP210- BLP_I_SPRD_MID does not respect user YAS settings, one major difference is that SP210 is calculated based on hard-coded BGN settings  and the BLP fields a bit more legacy and serve a purpose to create history which limits their flexibility.
+
+And YAS_ISPREAD will always match the YAS screen and respect user settings.
+14:06:29 DARREN LEFCOE : Okay,  perfect.
+14:06:35 DARREN LEFCOE : This makes exact sense.
+14:07:34 DARREN LEFCOE : Are there different BDH settings for [1] worst, [2] next call please ?
+14:08:00 BLOOMBERG HELP DESK : Which field are you referring? -  Yas field?
+14:14:20 BLOOMBERG HELP DESK : For Yas yield, ytw will always gives you the lowest yield for all scenarios. While YTC gives you the yield of next call
+14:14:32 DARREN LEFCOE : An equivalent to blp_i_sprd_mid that does only *next call* and does not respect *worst*
+14:15:06 DARREN LEFCOE : So a historical measure of NEXTCALL
+14:15:34 BLOOMBERG HELP DESK : As discussed above BLP fields are hard coded will not reflect user settings
+14:19:22 DARREN LEFCOE : Understood.  Is there a user setting independent field that captures spread-to-next-call ?
+14:20:43 BLOOMBERG HELP DESK : You can use yas field and override the yield flat to yield to call
+14:21:24 DARREN LEFCOE : Is there a user setting independent field that captures spread-to-next-call *for historical data* ?
+14:23:59 BLOOMBERG HELP DESK : =BDP("EC527035@BMRK Corp","YAS_ZSPREAD", "YAS_YLD_FLAG=15", "SETTLE_DT=20200624")
+
+you can override the settlement date to get historical data
+14:26:26 BLOOMBERG HELP DESK : In general, on YAS  <GO>, the yield is defaulted to YTW except for certain calc typs such as 1469. To ensure it, we can override the yield to YTW in the formula as in above
+14:31:09 BLOOMBERG HELP DESK : Sorry, you were looking at YTC
+14:32:53 BLOOMBERG HELP DESK : Please yield flag 10
+14:36:14 BLOOMBERG HELP DESK : =BDP("BJ2263660@BGN Corp","YAS_ZSPREAD", "YAS_YLD_FLAG=10", "SETTLE_DT=20200624")
+
+for historicall data, you can override the settlement date or cell reference the date
+14:36:27 BLOOMBERG HELP DESK : Thanks for reaching Help Desk. Please feel free to reach us back if you need further assistance. This is your reference number H#1157700798.
