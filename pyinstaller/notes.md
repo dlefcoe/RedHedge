@@ -5,7 +5,7 @@ Written by @dlefcoe
     pip install pyinstaller
 
 
-## no create a python file
+## now create a python file
 you can just make a simple hello world file for this
 
     x = 'hello world'
