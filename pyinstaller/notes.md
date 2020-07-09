@@ -34,6 +34,7 @@ run using the hello --onefile option
     pyinstaller --onefile helloworld.py
     
 if you have a gui then also inclue the -w option so that the console does not remain open in the background
+
     pyinstaller --onefile -w helloworld.py
 
 
