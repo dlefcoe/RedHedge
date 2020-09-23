@@ -8,13 +8,16 @@ https://medium.com/@johann_78792/getting-started-with-bloombergs-python-desktop-
 
 '''
 
-
+# module imports
 import time
 import os
 
 
 with os.add_dll_directory('C:/blp/DAPI'):
     import blpapi
+
+    
+# code below here
 
 t = time.time()
 print (t)
